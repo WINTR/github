@@ -523,6 +523,40 @@
           }
         });
       };
+      this.participation = function (cb, retry) {
+        retry = retry || 1000;
+        var self = this;
+        _request("GET", repoPath + "/stats/participation", null, function (err, data, response) {
+          if (err) return cb(err);
+          if (response.status === 202) {
+            setTimeout(
+              function () {
+                self.participation(cb, retry);
+              },
+              retry
+            );
+          } else {
+            cb(err, data);
+          }
+        });
+      };
+      this.releases = function (cb, retry) {
+        retry = retry || 1000;
+        var self = this;
+        _request("GET", repoPath + "/releases", null, function (err, data, response) {
+          if (err) return cb(err);
+          if (response.status === 202) {
+            setTimeout(
+              function () {
+                self.getReleases(cb, retry);
+              },
+              retry
+            );
+          } else {
+            cb(err, data);
+          }
+        });
+      };
 
       // Get contents
       // --------
